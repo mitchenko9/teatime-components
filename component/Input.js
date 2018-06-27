@@ -68,11 +68,15 @@ class Input extends Component {
   }
 
   _onClear = e => {
-    const {name} = this.props;
+    const { name, onClear} = this.props;
     const value = '';
 
     if (!this._controlled) this.setState({value});
-    this.props.onChange(e, {name, value});
+    if (typeof (onClear) === 'function') {
+      onClear(e);
+    } else {
+      this.props.onChange(e, {name, value});
+    }
     this.focus();
   }
 
@@ -135,6 +139,7 @@ class Input extends Component {
         name={name}
         onBlur={onBlur}
         onChange={this._onChange}
+        onClear={this._onClear}
         onFocus={onFocus}
         placeholder={placeholder}
         readOnly={readOnly}
@@ -147,6 +152,7 @@ class Input extends Component {
 
 Input.defaultProps = {
   onChange: noop,
+  onClear: noop,
   size: 'm',
   styles: cssModules,
   type: 'text',
@@ -169,6 +175,7 @@ Input.propTypes = {
   name: PropTypes.string.isRequired,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
+  onClear: PropTypes.func,
   onFocus: PropTypes.func,
   placeholder: PropTypes.string,
   readOnly: PropTypes.bool,
